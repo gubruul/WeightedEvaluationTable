@@ -1,4 +1,5 @@
 const table=document.getElementById("evalTable");
+weightRow.insertBefore(weightTh,weightRow.lastElementChild);
 
 [...tbody.rows].forEach(row=>{
 const td=document.createElement("td");
