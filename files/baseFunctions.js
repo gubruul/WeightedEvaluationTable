@@ -12,9 +12,16 @@ document.getElementById("reset").onclick=()=>{localStorage.removeItem(STORAGE_KE
 
 function addColumn(name="Property",weight=1){
 propertyCount++;
+
 const th=document.createElement("th");
-th.innerHTML=`${name} <button class='deleteBtn'>×</button>`;
-th.querySelector("button").onclick=()=>removeColumn(th.cellIndex);
+const input=document.createElement("input");
+input.className="headerInput";
+input.value=name;
+input.oninput=save;
+const del=document.createElement("button");
+del.textContent="×";del.className="deleteBtn";
+del.onclick=()=>removeColumn(th.cellIndex);
+th.appendChild(input);th.appendChild(del);
 headerRow.insertBefore(th,headerRow.lastElementChild);
 
 const weightTh=document.createElement("th");
@@ -26,10 +33,10 @@ weightRow.insertBefore(weightTh,weightRow.lastElementChild);
 
 [...tbody.rows].forEach(row=>{
 const td=document.createElement("td");
-const input=document.createElement("input");
-input.type="number";
-input.oninput=()=>{calculateRow(row);save()};
-td.appendChild(input);
+const inp=document.createElement("input");
+inp.type="number";
+inp.oninput=()=>{calculateRow(row);save()};
+td.appendChild(inp);
 row.insertBefore(td,row.lastElementChild);
 });
 }
@@ -92,7 +99,13 @@ if(bestRow)bestRow.classList.add("best");
 }
 
 function save(){
-const data={weights:getWeights(),headers:[...headerRow.children].slice(1,-1).map(th=>th.textContent.trim()),rows:[...tbody.rows].map(r=>({name:r.children[0].querySelector("input").value,values:[...r.children].slice(1,-1).map(td=>td.firstChild.value)}))};
+const data={
+weights:getWeights(),
+headers:[...headerRow.children].slice(1,-1).map(th=>th.querySelector("input").value),
+rows:[...tbody.rows].map(r=>({
+name:r.children[0].querySelector("input").value,
+values:[...r.children].slice(1,-1).map(td=>td.firstChild.value)
+}))};
 localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
 }
 
