@@ -1,4 +1,27 @@
 const table=document.getElementById("evalTable");
+const headerRow=document.getElementById("headerRow");
+const weightRow=document.getElementById("weightRow");
+const tbody=table.querySelector("tbody");
+let propertyCount=0;
+
+const STORAGE_KEY="weightedTableData";
+
+document.getElementById("addCol").onclick=()=>{addColumn();save()};
+document.getElementById("addRow").onclick=()=>{addRow();save()};
+document.getElementById("reset").onclick=()=>{localStorage.removeItem(STORAGE_KEY);location.reload()};
+
+function addColumn(name="Property",weight=1){
+propertyCount++;
+const th=document.createElement("th");
+th.innerHTML=`${name} <button class='deleteBtn'>×</button>`;
+th.querySelector("button").onclick=()=>removeColumn(th.cellIndex);
+headerRow.insertBefore(th,headerRow.lastElementChild);
+
+const weightTh=document.createElement("th");
+const weightInput=document.createElement("input");
+weightInput.type="number";weightInput.value=weight;weightInput.step="0.1";
+weightInput.oninput=()=>{calculateAll();save()};
+weightTh.appendChild(weightInput);
 weightRow.insertBefore(weightTh,weightRow.lastElementChild);
 
 [...tbody.rows].forEach(row=>{
